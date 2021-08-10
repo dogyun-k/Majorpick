@@ -89,10 +89,8 @@ if "__main__":
     driver.implicitly_wait(time_to_wait=10)
 
 
-
-
-
     login(input_boxes, user_info)
+
 
     while True:
 
@@ -116,10 +114,11 @@ if "__main__":
 
         # 수강 제한 인원수 읽기
         std = find_element(limit_std)
-        print(std.text, int(time.time() - start))
+        print(std.text, int(time.time() - start), "초...\t", end='\r')
 
         if int(std.text) % 10 != 0:     # 신청 버튼 누르기
                                         # 해당 수식은 수강신청 과목 제한 수가 10으로 나눠떨어진다고 가정함.
+            print('Empty 1')
             submit = find_element(buttons['submit'])
             submit.click()
 
