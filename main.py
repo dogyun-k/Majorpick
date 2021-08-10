@@ -24,13 +24,11 @@ input_boxes = {
 buttons = {
     'login': '//*[@id="loginForm"]/table/tbody/tr[4]/td/button[1]', 
     'end': '//*[@id="logout"]/button[1]',
-    'submit': '//*[@id="lectPackReqGrid_2"]/td[11]/a',
+    'submit': '',
     'test': '//*[@id="lectPackReqGrid_0"]/td[11]/a'
     }
 
 
-# limit_std = '//*[@id="lectPackReqGrid_2"]/td[9]'
-limit_std = ''
 
 
 
@@ -64,16 +62,28 @@ if "__main__":
 
     start = time.time()
 
-    user_info[0] = input("학번 : ")
-    user_info[1] = input("아이디 : ")
-    user_info[2] = input("비밀번호 : ")
-    buttons['submit'] = input("버튼 XPath : ")
-    limit_std = input("수강제한수 XPath : ")
+    user_info[0] = input("Student ID : ")
+    user_info[1] = input("YES ID : ")
+    user_info[2] = input("YES PW : ")
+    row = input("row (0부터 시작) : ")
+
+    major = '//*[@id="lectPackReqGrid_' + row + '"]/td[2]'
+    total_possble = '//*[@id="lectPackReqGrid_' + row + '"]/td[8]'
+    limit_std = '//*[@id="lectPackReqGrid_' + row + '"]/td[9]'
+    buttons['submit'] = '//*[@id="lectPackReqGrid_' + row + '"]/td[11]/a'
 
 
     driver = webdriver.Chrome()
     wait = WebDriverWait(driver, 10)
     url = 'https://sugang.knu.ac.kr/'
+
+    # # 쓸데없는 오류메세지 제거
+    # options = webdriver.ChromeOptions()
+    # options.add_experimental_option("excludeSwitches", ["enable-logging"])
+    # browser = webdriver.Chrome(options=options)
+
+    # # 오픈
+    # browser.get(url)
     driver.get(url)
     alert = Alert(driver)       # 알람 제어
 
@@ -91,6 +101,8 @@ if "__main__":
 
     login(input_boxes, user_info)
 
+    mj_name = find_element(major).text
+    total = find_element(total_possble).text
 
     while True:
 
@@ -114,9 +126,9 @@ if "__main__":
 
         # 수강 제한 인원수 읽기
         std = find_element(limit_std)
-        print(std.text, int(time.time() - start), "초...\t", end='\r')
+        print('target :', mj_name, total, '/', std.text, int(time.time() - start), "sec...\t", end='\r')
 
-        if int(std.text) % 10 != 0:     # 신청 버튼 누르기
+        if int(std.text) != int(total):     # 신청 버튼 누르기
                                         # 해당 수식은 수강신청 과목 제한 수가 10으로 나눠떨어진다고 가정함.
             print('Empty 1')
             submit = find_element(buttons['submit'])
