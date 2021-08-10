@@ -10,31 +10,8 @@ import time
 
 
 
-user_info = ['2016116256', 'kdk124578', 'kdk519437!']
-
-# 수강과목 제한수 
-limit_std_num = 40
-
-
-
-
-
-driver = webdriver.Chrome()
-wait = WebDriverWait(driver, 10)
-url = 'https://sugang.knu.ac.kr/'
-driver.get(url)
-alert = Alert(driver)       # 알람 제어
-
-
-driver.implicitly_wait(time_to_wait=10)
-
-# 팝업 닫기
-driver.switch_to_window(driver.window_handles[1])
-driver.close()
-driver.switch_to_window(driver.window_handles[0])
-
-# 페이지 로딩 대기
-driver.implicitly_wait(time_to_wait=10)
+# 유저 정보
+user_info = ['학번', '아이디', '비밀번호']
 
 # 로그인 박스 부분
 input_boxes = {
@@ -47,15 +24,13 @@ input_boxes = {
 buttons = {
     'login': '//*[@id="loginForm"]/table/tbody/tr[4]/td/button[1]', 
     'end': '//*[@id="logout"]/button[1]',
-
-    'submit': '//*[@id="lectPackReqGrid_2"]/td[11]/a',      # <<< 해당 수강과목 신청버튼 XPath 복사해서 넣어야함.
-
+    'submit': '//*[@id="lectPackReqGrid_2"]/td[11]/a',
     'test': '//*[@id="lectPackReqGrid_0"]/td[11]/a'
     }
 
 
-limit_std = '//*[@id="lectPackReqGrid_2"]/td[9]'            # <<< 해당 수강과목 제한수 XPath 복사해서 넣어야함.
-
+# limit_std = '//*[@id="lectPackReqGrid_2"]/td[9]'
+limit_std = ''
 
 
 
@@ -85,52 +60,80 @@ def login(boxes, value):
 
 
 
+if "__main__":
 
-start = time.time()
+    start = time.time()
 
-login(input_boxes, user_info)
-
-while True:
-
-    if time.time() - start >= 1000:         # 로그인 시간 초과 시 재 로그인
-        
-        end = find_element(buttons['end'])
-        end.click()
-
-        driver.implicitly_wait(time_to_wait=10)
-        driver.switch_to_window(driver.window_handles[1])
-        driver.close()
-        driver.switch_to_window(driver.window_handles[0])
-        driver.implicitly_wait(time_to_wait=10)
-        print("Logout!")
-
-        time.sleep(1)
-        login(input_boxes, user_info)
-
-        start = time.time()
+    user_info[0] = input("학번 : ")
+    user_info[1] = input("아이디 : ")
+    user_info[2] = input("비밀번호 : ")
+    buttons['submit'] = input("버튼 XPath : ")
+    limit_std = input("수강제한수 XPath : ")
 
 
-    # 수강 제한 인원수 읽기
-    std = find_element(limit_std)
-    print(std.text, int(time.time() - start))
+    driver = webdriver.Chrome()
+    wait = WebDriverWait(driver, 10)
+    url = 'https://sugang.knu.ac.kr/'
+    driver.get(url)
+    alert = Alert(driver)       # 알람 제어
 
-    if int(std.text) % 10 != 0:     # 신청 버튼 누르기
-                                    # 해당 수식은 수강신청 과목 제한 수가 10으로 나눠떨어진다고 가정함.
 
-        submit = find_element(buttons['submit'])
-        submit.click()
+    driver.implicitly_wait(time_to_wait=10)
+    time.sleep(1)
+    # 팝업 닫기
+    driver.switch_to_window(driver.window_handles[1])
+    driver.close()
+    driver.switch_to_window(driver.window_handles[0])
 
-        time.sleep(1)
-        alert.accept()
+    # 페이지 로딩 대기
+    driver.implicitly_wait(time_to_wait=10)
 
-        end = find_element(buttons['end'])
-        end.click()
-        driver.implicitly_wait(time_to_wait=10)
 
-        break
-    else:               # 새로고침 하기
-        driver.refresh()
-        driver.implicitly_wait(time_to_wait=10)
 
-driver.close()
-print('complete')
+
+
+    login(input_boxes, user_info)
+
+    while True:
+
+        if time.time() - start >= 1000:         # 로그인 시간 초과 시 재 로그인
+            
+            end = find_element(buttons['end'])
+            end.click()
+
+            driver.implicitly_wait(time_to_wait=10)
+            driver.switch_to_window(driver.window_handles[1])
+            driver.close()
+            driver.switch_to_window(driver.window_handles[0])
+            driver.implicitly_wait(time_to_wait=10)
+            print("Logout!")
+
+            time.sleep(1)
+            login(input_boxes, user_info)
+
+            start = time.time()
+
+
+        # 수강 제한 인원수 읽기
+        std = find_element(limit_std)
+        print(std.text, int(time.time() - start))
+
+        if int(std.text) % 10 != 0:     # 신청 버튼 누르기
+                                        # 해당 수식은 수강신청 과목 제한 수가 10으로 나눠떨어진다고 가정함.
+            submit = find_element(buttons['submit'])
+            submit.click()
+
+            time.sleep(1)
+            alert.accept()
+
+            end = find_element(buttons['end'])
+            end.click()
+            driver.implicitly_wait(time_to_wait=10)
+
+            break
+        else:               # 새로고침 하기
+            driver.refresh()
+            driver.implicitly_wait(time_to_wait=10)
+
+    driver.close()
+    print('complete')
