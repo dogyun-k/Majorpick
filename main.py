@@ -10,8 +10,10 @@ import time
 
 
 
-user_info = ['2016115845', 'dudals5614', 'q1w1e1r1t1!']
+user_info = ['2016116256', 'kdk124578', 'kdk519437!']
 
+# 수강과목 제한수 
+limit_std_num = 40
 
 
 
@@ -25,6 +27,7 @@ alert = Alert(driver)       # 알람 제어
 
 
 driver.implicitly_wait(time_to_wait=10)
+
 # 팝업 닫기
 driver.switch_to_window(driver.window_handles[1])
 driver.close()
@@ -33,20 +36,25 @@ driver.switch_to_window(driver.window_handles[0])
 # 페이지 로딩 대기
 driver.implicitly_wait(time_to_wait=10)
 
+# 로그인 박스 부분
 input_boxes = {
     'std_id': '//*[@id="user.stu_nbr"]', 
     'id': '//*[@id="user.usr_id"]', 
     'pass': '//*[@id="user.passwd"]'
     }
 
+# 각종 버튼들 
 buttons = {
     'login': '//*[@id="loginForm"]/table/tbody/tr[4]/td/button[1]', 
     'end': '//*[@id="logout"]/button[1]',
-    'submit': '//*[@id="lectPackReqGrid_2"]/td[11]/a',
+
+    'submit': '//*[@id="lectPackReqGrid_2"]/td[11]/a',      # <<< 해당 수강과목 신청버튼 XPath 복사해서 넣어야함.
+
     'test': '//*[@id="lectPackReqGrid_0"]/td[11]/a'
     }
 
-limit_std = '//*[@id="lectPackReqGrid_2"]/td[9]'
+
+limit_std = '//*[@id="lectPackReqGrid_2"]/td[9]'            # <<< 해당 수강과목 제한수 XPath 복사해서 넣어야함.
 
 
 
@@ -56,7 +64,6 @@ def find_element(xpath):
         EC.presence_of_element_located((By.XPATH, xpath))
     )
     return driver.find_element_by_xpath(xpath)
-
 
 def login(boxes, value):
 
@@ -85,7 +92,7 @@ login(input_boxes, user_info)
 
 while True:
 
-    if time.time() - start >= 1000:         # 로그인 시간 초과 시
+    if time.time() - start >= 1000:         # 로그인 시간 초과 시 재 로그인
         
         end = find_element(buttons['end'])
         end.click()
@@ -102,13 +109,13 @@ while True:
 
         start = time.time()
 
-    std = find_element(limit_std)
 
+    # 수강 제한 인원수 읽기
+    std = find_element(limit_std)
     print(std.text, int(time.time() - start))
 
-
-
-    if std.text != '40':     # 신청 버튼 누르기
+    if int(std.text) % 10 != 0:     # 신청 버튼 누르기
+                                    # 해당 수식은 수강신청 과목 제한 수가 10으로 나눠떨어진다고 가정함.
 
         submit = find_element(buttons['submit'])
         submit.click()
