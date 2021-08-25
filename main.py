@@ -6,8 +6,8 @@ from selenium.webdriver.common.alert import Alert
 import time
 
 
-
-
+# 실행파일로 만들기
+# pyinstaller --onefile main.py
 
 
 # 유저 정보
