@@ -129,7 +129,6 @@ if "__main__":
         print('target :', mj_name, total, '/', std.text, int(time.time() - start), "sec...\t", end='\r')
 
         if int(std.text) != int(total):     # 신청 버튼 누르기
-                                        # 해당 수식은 수강신청 과목 제한 수가 10으로 나눠떨어진다고 가정함.
             print('Empty 1')
             submit = find_element(buttons['submit'])
             submit.click()
