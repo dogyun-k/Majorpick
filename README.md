@@ -1,4 +1,4 @@
-<h1 align="middle">MajorPICK</h1>
+<h1 align="middle">메이저픽</h1>
 <h3 align="middle">KNU 수강신청 도우미</h3>
 <br/>
 
