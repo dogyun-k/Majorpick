@@ -1,5 +1,5 @@
-<h1 align="middle">KNU</h1>
-<h3 align="middle">수강신청 도우미</h3>
+<h1 align="middle">MajorPICK</h1>
+<h3 align="middle">KNU 수강신청 도우미</h3>
 <br/>
 
 ## 📝 Introduce
