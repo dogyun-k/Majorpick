@@ -1,4 +1,6 @@
-# 경북대학교 수강신청 도우미
+<h1 align="middle">KNU</h1>
+<h3 align="middle">수강신청 도우미</h3>
+<br/>
 
 ## 📝 Introduce
 
